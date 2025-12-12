@@ -3,105 +3,120 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sem 3 · Routine (Preloaded)</title>
+<title>Sem 3 · Routine</title>
 <style>
   :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
   *{box-sizing:border-box}
   body{margin:0;background:#020617;color:#e5e7eb;display:flex;justify-content:center;min-height:100vh}
-  .app{width:100%;max-width:920px;padding:18px}
-  .card{background:#020617;border-radius:16px;padding:16px;border:1px solid rgba(148,163,184,0.22);box-shadow:0 16px 36px rgba(0,0,0,0.55)}
-  header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
-  h1{margin:0;font-size:1.2rem}
-  .tag{font-size:0.78rem;color:#9ca3af}
-  .pill{font-size:0.72rem;padding:6px 10px;border-radius:999px;border:1px solid rgba(129,140,248,0.7);color:#c7d2fe}
-  .controls{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .wrap{width:100%;max-width:960px;padding:18px}
+  .card{background:#020617;border-radius:14px;padding:16px;border:1px solid rgba(148,163,184,0.16);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px}
+  h1{margin:0;font-size:1.15rem}
+  .pill{font-size:0.75rem;padding:6px 10px;border-radius:999px;border:1px solid rgba(99,102,241,0.18);color:#c7d2fe}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
   label{font-size:0.75rem;color:#9ca3af}
-  input[type=date]{padding:6px 8px;border-radius:10px;border:1px solid #374151;background:#020617;color:#e5e7eb}
-  .btn{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:#020617;color:#e5e7eb;cursor:pointer}
-  .weekday-row{display:flex;gap:6px;margin-bottom:10px;overflow:auto}
-  .weekday{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:#020617;color:#9ca3af;cursor:pointer}
-  .weekday.active{border-color:#6366f1;background:rgba(79,70,229,0.22);color:#e5e7eb}
-  .section{display:flex;justify-content:space-between;align-items:center;margin:6px 0;font-size:0.92rem}
-  .legend{display:flex;gap:8px;color:#9ca3af;font-size:0.76rem;margin-bottom:6px}
-  .routine{border-radius:10px;border:1px solid #111827;padding:6px;max-height:360px;overflow:auto;background:linear-gradient(180deg,rgba(10,14,24,0.6),#020617)}
-  .row{display:grid;grid-template-columns:1.1fr 2.2fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(17,24,39,0.6);align-items:center;font-size:0.86rem}
+  input[type=date]{padding:6px;border-radius:8px;border:1px solid #374151;background:#020617;color:#e5e7eb}
+  .btn{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:transparent;color:inherit;cursor:pointer}
+  .weekday-row{display:flex;gap:8px;overflow:auto;padding-bottom:6px;margin-bottom:8px}
+  .wd{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:transparent;color:#9ca3af;cursor:pointer;white-space:nowrap}
+  .wd.active{background:rgba(99,102,241,0.18);color:#e5e7eb;border-color:#6366f1}
+  .section{margin-top:8px}
+  .routine{border-radius:10px;border:1px solid #1f2937;padding:6px;max-height:360px;overflow:auto;background:linear-gradient(180deg, rgba(10,12,20,0.6), #020617)}
+  .row{display:grid;grid-template-columns:1.2fr 2.6fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(31,41,55,0.9);align-items:center;font-size:0.88rem}
   .row:last-child{border-bottom:none}
   .time{font-weight:600}
-  .code{color:#a5b4fc;font-size:0.78rem}
-  .meta{font-size:0.72rem;color:#9ca3af}
-  .status{padding:4px 8px;border-radius:999px;border:1px solid #374151;background:#020617;min-width:64px;text-align:center;cursor:pointer}
-  .unmarked{border-style:dashed;color:#9ca3af}
-  .present{background:rgba(34,197,94,0.18);border-color:#22c55e;color:#bbf7d0}
-  .absent{background:rgba(239,68,68,0.14);border-color:#ef4444;color:#fecaca}
-  .report{margin-top:8px;border-radius:10px;border:1px solid #111827;padding:8px;font-size:0.86rem}
+  .code{font-size:0.78rem;color:#a5b4fc}
+  .meta{font-size:0.75rem;color:#9ca3af}
+  .status{padding:4px 8px;border-radius:999px;border:1px solid #374151;background:transparent;cursor:pointer;min-width:56px;text-align:center}
+  .s-p{background:rgba(34,197,94,0.14);border-color:#22c55e;color:#a7f3d0}
+  .s-a{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#fecaca}
+  .s-u{border-style:dashed;color:#9ca3af}
+  .legend{display:flex;gap:12px;font-size:0.78rem;color:#9ca3af;margin-top:6px}
+  .report{margin-top:8px;border-radius:10px;border:1px solid #1f2937;padding:8px;font-size:0.88rem;background:#020617}
   table{width:100%;border-collapse:collapse}
-  th,td{padding:6px 8px;border-bottom:1px solid #111827;text-align:left}
+  th,td{padding:6px;border-bottom:1px solid #111827;text-align:left}
   th{font-size:0.78rem;color:#9ca3af}
-  .empty{padding:12px;color:#9ca3af;text-align:center}
-  @media (max-width:640px){.row{grid-template-columns:1fr 1.8fr auto}}
+  tfoot td{font-weight:600;border-top:1px solid #1f2937}
+  .subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:8px}
+  .sub{padding:8px;border-radius:8px;border:1px solid #1f2937}
+  .sub .c{color:#a5b4fc;font-size:0.78rem}
+  .empty{padding:10px;text-align:center;color:#9ca3af}
+  @media (max-width:640px){.row{grid-template-columns:1fr 2fr auto}}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="wrap">
   <div class="card">
     <header>
       <div>
         <h1>Sem 3 · Routine</h1>
-        <div class="tag">Preloaded from your PDF (Sem 3). Tap P/A to mark.</div>
+        <div style="font-size:0.82rem;color:#9ca3af">Fixed timetable · Local attendance</div>
       </div>
-      <div class="pill">Local · Offline</div>
+      <div class="pill">Offline</div>
     </header>
 
     <div class="controls">
       <div>
-        <label>Date</label><br />
-        <input type="date" id="date" />
+        <label for="date">Date</label><br>
+        <input id="date" type="date">
       </div>
-      <div style="min-width:140px">
-        <label>&nbsp;</label><br />
-        <button class="btn" id="today">Today</button>
+      <div>
+        <label>&nbsp;</label><br>
+        <button id="today" class="btn">Today</button>
       </div>
       <div style="min-width:160px">
-        <label>Day</label><br />
-        <div id="dayChip" style="padding:6px 10px;border-radius:999px;border:1px solid #374151;background:#020617;color:#9ca3af">-</div>
+        <label>Day</label><br>
+        <div id="daychip" style="padding:6px 10px;border-radius:999px;border:1px solid #374151;color:#e5e7eb">–</div>
       </div>
     </div>
 
-    <div class="weekday-row" id="weekdayRow">
-      <div class="weekday" data-day="Monday">Mon</div>
-      <div class="weekday" data-day="Tuesday">Tue</div>
-      <div class="weekday" data-day="Wednesday">Wed</div>
-      <div class="weekday" data-day="Thursday">Thu</div>
-      <div class="weekday" data-day="Friday">Fri</div>
-      <div class="weekday" data-day="Saturday">Sat</div>
+    <div class="weekday-row" id="wds">
+      <div class="wd" data-day="Monday">Mon</div>
+      <div class="wd" data-day="Tuesday">Tue</div>
+      <div class="wd" data-day="Wednesday">Wed</div>
+      <div class="wd" data-day="Thursday">Thu</div>
+      <div class="wd" data-day="Friday">Fri</div>
+      <div class="wd" data-day="Saturday">Sat</div>
     </div>
 
     <div class="section">
-      <div>Classes</div>
-      <div id="mode" class="meta"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:600">Classes</div>
+        <div id="mode" style="font-size:0.82rem;color:#9ca3af"></div>
+      </div>
+
+      <div class="legend">
+        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;margin-right:6px"></span> P</div>
+        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;margin-right:6px"></span> A</div>
+        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#6b7280;margin-right:6px"></span> –</div>
+      </div>
+
+      <div class="routine" id="routine"></div>
+      <div class="empty" id="empt" style="display:none">No classes for this day.</div>
     </div>
 
-    <div class="legend"><span><b style="color:#22c55e">●</b> P</span><span><b style="color:#ef4444">●</b> A</span><span>– unmarked</span></div>
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:600">Report</div>
+        <div style="font-size:0.82rem;color:#9ca3af">Per paper</div>
+      </div>
+      <div class="report" id="report"></div>
+    </div>
 
-    <div class="routine" id="routine"></div>
-    <div class="empty" id="noClasses" style="display:none">No classes for this day.</div>
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:600">Subjects</div>
+        <div style="font-size:0.82rem;color:#9ca3af">Short codes used</div>
+      </div>
+      <div class="subjects" id="subjects"></div>
+    </div>
 
-    <div class="section" style="margin-top:12px"><div>Report</div><div class="meta">Per paper</div></div>
-    <div class="report" id="report"></div>
-
-    <div style="margin-top:12px;font-size:0.78rem;color:#9ca3af">Source: timetable PDF (Sem 3) — teachers shown as short codes. Parsed from pages 1–2. 1</div>
   </div>
 </div>
 
 <script>
-/* -------------------------
-   PRELOADED WEEKLY ROUTINE
-   extracted from your PDF (Sem 3)
-   times are the table columns: 2:00-3:00 ... 6:00-7:00
-   teacher codes kept exactly as in PDF.
-   Source pages: 1–2 (your uploaded file). 2
-   ------------------------- */
-const WEEKLY = {
+/* ---------- Static weekly routine (extracted from your PDF) ---------- */
+const WEEKLY_ROUTINE = {
   "Monday": [
     {start:"14:00", end:"15:00", paper:"CA&IDS", teacher:"AR/AD"},
     {start:"15:00", end:"16:00", paper:"CA II", teacher:"TKG"},
@@ -142,108 +157,101 @@ const WEEKLY = {
     {start:"15:00", end:"16:00", paper:"Remedial", teacher:""},
     {start:"16:00", end:"17:00", paper:"CA II", teacher:"AKS"},
     {start:"17:00", end:"18:00", paper:"DT-I", teacher:"SKD"},
-    {start:"18:00", end:"19:00", paper:"Tutorial", teacher:"AKS"}
+    {start:"18:00", end:"19:00", paper:"TUTORIAL", teacher:"AKS"}
   ]
 };
 
-/* storage keys */
-const ATT_KEY = "sem3_mock_attendance_v1";
+/* ---------- Attendance storage key ---------- */
+const ATT_KEY = "sem3_attendance_v_final";
 
-/* --- helpers --- */
-function toISO(d){ return d.toISOString().slice(0,10) }
-function weekdayFromISO(iso){ const [y,m,d]=iso.split("-").map(Number); return ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date(y,m-1,d).getDay()]; }
-function statusKey(date,slot){ return `${date}__${slot.start}__${slot.paper}`; }
-function getMap(){ try{ return JSON.parse(localStorage.getItem(ATT_KEY)||"{}") }catch(e){return{}} }
-function setMap(m){ localStorage.setItem(ATT_KEY, JSON.stringify(m)) }
-function next(s){ return s==="unmarked"?"present": s==="present"?"absent":"unmarked" }
-function applyStyle(btn,s){ btn.classList.remove("unmarked","present","absent"); if(s==="present"){btn.classList.add("present"); btn.textContent="P"} else if(s==="absent"){btn.classList.add("absent"); btn.textContent="A"} else {btn.classList.add("unmarked"); btn.textContent="–"} }
+/* ---------- Helpers ---------- */
+function toISO(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${dd}`}
+const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function weekdayFromISO(iso){const [y,m,d]=iso.split("-").map(Number);return WEEKDAYS[new Date(y,m-1,d).getDay()]}
+function formatRange(s,e){if(!s&&!e)return""; if(s&&!e) return s; if(!s&&e) return e; return `${s}–${e}`}
 
-/* --- render subjects (simple) --- */
-function renderRoutineFor(iso){
-  const wd = weekdayFromISO(iso);
-  const list = WEEKLY[wd]||[];
-  document.getElementById("dayChip").textContent = `${wd} · ${iso}`;
-  document.getElementById("mode").textContent = wd;
-  const container = document.getElementById("routine");
-  container.innerHTML = "";
-  if(!list.length){ document.getElementById("noClasses").style.display="block"; return } else { document.getElementById("noClasses").style.display="none" }
-  list.forEach(slot=>{
-    const row=document.createElement("div"); row.className="row";
-    const left=document.createElement("div"); left.innerHTML=`<div class="time">${slot.start} – ${slot.end}</div><div class="code">${slot.paper}</div>`;
-    const mid=document.createElement("div"); mid.innerHTML=`<div style="font-weight:600">${slot.teacher ? slot.teacher : ""}</div><div class="meta">${slot.teacher?'' : ''}</div><div class="meta">${slot.teacher?slot.teacher:''}</div><div class="meta">${''}</div>`;
-    const info=document.createElement("div"); 
-    const btn=document.createElement("button"); btn.className="status"; 
-    const m = getMap(); const key=statusKey(iso,slot); const st = m[key]||"unmarked"; applyStyle(btn,st);
-    btn.addEventListener("click",()=>{
-      const cur = getMap(); const k=key; const newStatus = next(cur[k]||"unmarked");
-      if(newStatus==="unmarked"){ delete cur[k] } else { cur[k]=newStatus }
-      setMap(cur); applyStyle(btn,newStatus); buildReport();
-    });
-    info.appendChild(btn);
-    row.appendChild(left); row.appendChild(mid); row.appendChild(info);
-    container.appendChild(row);
-    // add small teacher line in mid properly:
-    mid.innerHTML = `<div style="font-weight:600">${slot.paper}</div><div class="meta">${slot.teacher ? slot.teacher : ""}</div>`;
+function loadAtt(){try{return JSON.parse(localStorage.getItem(ATT_KEY))||{}}catch(e){return{}}}
+function saveAtt(m){localStorage.setItem(ATT_KEY,JSON.stringify(m))}
+function statusKey(date,slot){return `${date}__${slot.start||slot.time}__${slot.paper}` }
+function getStatus(date,slot){const m=loadAtt();return m[statusKey(date,slot)]||"unmarked"}
+function setStatus(date,slot,status){const m=loadAtt();const k=statusKey(date,slot); if(status==="unmarked"){delete m[k]} else m[k]=status; saveAtt(m)}
+function nextStatus(cur){if(cur==="unmarked")return"present"; if(cur==="present")return"absent"; return"unmarked"}
+
+/* ---------- Render subjects list ---------- */
+const subjectsEl = document.getElementById("subjects");
+function renderSubjects(){
+  subjectsEl.innerHTML="";
+  const seen = {};
+  Object.values(WEEKLY_ROUTINE).flat().forEach(s=>{
+    const key = s.paper;
+    if(seen[key]) return; seen[key]=1;
+    const div = document.createElement("div"); div.className="sub";
+    div.innerHTML = `<div class="c">${key}</div><div style="font-weight:600">${s.teacher||"—"}</div>`;
+    subjectsEl.appendChild(div);
   });
 }
 
-/* --- report --- */
+/* ---------- Render routine for a date ---------- */
+const dateInput = document.getElementById("date"), routineEl=document.getElementById("routine"), empt=document.getElementById("empt"), modeEl=document.getElementById("mode"), dayChip=document.getElementById("daychip");
+function renderFor(iso){
+  if(!iso) return;
+  const wd = weekdayFromISO(iso);
+  modeEl.textContent = wd;
+  dayChip.textContent = `${wd} · ${iso}`;
+  const list = (WEEKLY_ROUTINE[wd]||[]).slice();
+  routineEl.innerHTML = "";
+  if(!list.length){empt.style.display="block"; return} empt.style.display="none";
+  list.forEach(slot=>{
+    const row = document.createElement("div"); row.className="row";
+    const left = document.createElement("div"); left.innerHTML = `<div class="time">${formatRange(slot.start,slot.end)}</div><div class="code">${slot.paper}</div>`;
+    const mid = document.createElement("div"); mid.innerHTML = `<div style="font-weight:600">${slot.paper}</div><div class="meta">${slot.teacher||"—"}</div>`;
+    const right = document.createElement("div");
+    const btn = document.createElement("button"); btn.className="status";
+    let st = getStatus(iso,slot);
+    applyBtn(btn,st);
+    btn.onclick = ()=>{ st=nextStatus(st); setStatus(iso,slot,st); applyBtn(btn,st); buildReport(); }
+    right.appendChild(btn);
+    row.appendChild(left); row.appendChild(mid); row.appendChild(right);
+    routineEl.appendChild(row);
+  });
+}
+function applyBtn(btn,status){
+  btn.className="status";
+  if(status==="present"){btn.classList.add("s-p"); btn.textContent="P"}
+  else if(status==="absent"){btn.classList.add("s-a"); btn.textContent="A"}
+  else {btn.classList.add("s-u"); btn.textContent="–"}
+}
+
+/* ---------- Report ---------- */
+const reportEl = document.getElementById("report");
 function buildReport(){
-  const m = getMap(); const entries = Object.entries(m);
-  const out = document.getElementById("report");
-  if(!entries.length){ out.innerHTML = '<div class="empty">No attendance marked yet.</div>'; return }
-  const stats = {}; let op=0, oa=0;
-  for(const [k,v] of entries){
-    if(!(v==="present"||v==="absent")) continue;
-    const parts=k.split("__"); if(parts.length<3) continue;
-    const paper = parts[2];
-    if(!stats[paper]) stats[paper]={present:0,absent:0};
-    stats[paper][v]++; if(v==="present") op++; if(v==="absent") oa++;
-  }
-  if(Object.keys(stats).length===0){ out.innerHTML = '<div class="empty">Only unmarked entries.</div>'; return }
+  const map = loadAtt(); const entries = Object.entries(map);
+  if(!entries.length){ reportEl.innerHTML=`<div style="color:#9ca3af">No data yet.</div>`; return }
+  const stats = {}; let op=0,oa=0;
+  for(const [k,v] of entries){ if(v!=="present" && v!=="absent") continue; const parts=k.split("__"); if(parts.length!==3) continue; const paper=parts[2]; if(!stats[paper]) stats[paper]={present:0,absent:0}; stats[paper][v]++; if(v==="present")op++; if(v==="absent")oa++; }
+  if(Object.keys(stats).length===0){ reportEl.innerHTML=`<div style="color:#9ca3af">Only unmarked entries.</div>`; return }
   let html='<table><thead><tr><th>Paper</th><th>P</th><th>A</th><th>%</th></tr></thead><tbody>';
   Object.keys(stats).forEach(p=>{
-    const s=stats[p]; const t=s.present+s.absent; const pct = t?Math.round((s.present/t)*100):0;
-    html += `<tr><td>${p}</td><td>${s.present}</td><td>${s.absent}</td><td>${pct}%</td></tr>`;
+    const s=stats[p]; const t=s.present+s.absent; const pct = t? Math.round((s.present/t)*100):0;
+    html+=`<tr><td>${p}</td><td>${s.present}</td><td>${s.absent}</td><td>${pct}%</td></tr>`;
   });
-  const total = op+oa; const totPct = total?Math.round((op/total)*100):0;
-  html += `</tbody><tfoot><tr><td>Total</td><td>${op}</td><td>${oa}</td><td>${totPct}%</td></tr></tfoot></table>`;
-  out.innerHTML = html;
+  const total = op+oa; const overall = total?Math.round((op/total)*100):0;
+  html += `</tbody><tfoot><tr><td>Total</td><td>${op}</td><td>${oa}</td><td>${overall}%</td></tr></tfoot></table>`;
+  reportEl.innerHTML = html;
 }
 
-/* --- date controls + weekday buttons --- */
-function setToday(){
-  const d=new Date(); const iso=toISO(d);
-  document.getElementById("date").value=iso; renderRoutineFor(iso); highlight(weekdayFromISO(iso)); buildReport();
-}
-function highlight(w){
-  document.querySelectorAll(".weekday").forEach(el=>el.classList.toggle("active", el.dataset.day===w));
-}
-document.getElementById("today").addEventListener("click", setToday);
-document.getElementById("date").addEventListener("change",(e)=>{ const iso=e.target.value; if(!iso) return; renderRoutineFor(iso); highlight(weekdayFromISO(iso)); buildReport(); });
+/* ---------- Weekday buttons / date logic ---------- */
+function setToday(){ const d=new Date(); const iso = toISO(d); dateInput.value=iso; renderFor(iso); highlight(weekdayFromISO(iso)); buildReport() }
+function highlight(wd){ document.querySelectorAll('.wd').forEach(e=> e.classList.toggle('active', e.dataset.day===wd)); }
+document.getElementById("today").addEventListener("click", ()=>{ setToday(); });
+document.querySelectorAll('.wd').forEach(b=> b.addEventListener('click', (ev)=>{ const day=ev.currentTarget.dataset.day; highlight(day); const today=new Date(); const mon = (d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); const day=x.getDay(); const diff=(day+6)%7; x.setDate(x.getDate()-diff); return x})(today); const offset = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(day); mon.setDate(mon.getDate()+offset); const iso=toISO(mon); dateInput.value=iso; renderFor(iso); buildReport(); }));
+dateInput.addEventListener('change', ()=>{ const v=dateInput.value; if(!v) return; renderFor(v); highlight(weekdayFromISO(v)); buildReport(); });
 
-document.querySelectorAll(".weekday").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    const w=btn.dataset.day;
-    const now=new Date(); const dow=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(w);
-    // find this week's date for that weekday
-    const curDow = now.getDay(); // 0 Sun .. 6 Sat
-    // compute Monday of current week
-    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const diff = (curDow + 6) % 7;
-    monday.setDate(monday.getDate() - diff + dow);
-    const iso = toISO(monday);
-    document.getElementById("date").value=iso;
-    renderRoutineFor(iso); highlight(w); buildReport();
-  });
-});
+/* ---------- Initial render ---------- */
+renderSubjects();
+setToday();
+buildReport();
 
-/* init */
-document.addEventListener("DOMContentLoaded", ()=>{
-  // default subjects shown by code itself; render today
-  setToday();
-  buildReport();
-});
 </script>
 </body>
 </html>
