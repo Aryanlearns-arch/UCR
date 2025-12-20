@@ -1,167 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sem 3 · Routine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sem 3 · Class Routine</title>
+
 <style>
-  :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
-  *{box-sizing:border-box}
-  body{margin:0;background:#020617;color:#e5e7eb;display:flex;justify-content:center;min-height:100vh}
-  .wrap{width:100%;max-width:960px;padding:18px}
-  .card{background:#020617;border-radius:14px;padding:16px;border:1px solid rgba(148,163,184,0.16);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-  header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px}
-  h1{margin:0;font-size:1.15rem}
-  .pill{font-size:0.75rem;padding:6px 10px;border-radius:999px;border:1px solid rgba(99,102,241,0.18);color:#c7d2fe}
-  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-  label{font-size:0.75rem;color:#9ca3af}
-  input[type=date]{padding:6px;border-radius:8px;border:1px solid #374151;background:#020617;color:#e5e7eb}
-  .btn{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:transparent;color:inherit;cursor:pointer}
-  .weekday-row{display:flex;gap:8px;overflow:auto;padding-bottom:6px;margin-bottom:8px}
-  .wd{padding:6px 10px;border-radius:999px;border:1px solid #374151;background:transparent;color:#9ca3af;cursor:pointer;white-space:nowrap}
-  .wd.active{background:rgba(99,102,241,0.18);color:#e5e7eb;border-color:#6366f1}
-  .section{margin-top:8px}
-  .routine{border-radius:10px;border:1px solid #1f2937;padding:6px;max-height:360px;overflow:auto;background:linear-gradient(180deg, rgba(10,12,20,0.6), #020617)}
-  .row{display:grid;grid-template-columns:1.2fr 2.6fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(31,41,55,0.9);align-items:center;font-size:0.88rem}
-  .row:last-child{border-bottom:none}
-  .time{font-weight:600}
-  .code{font-size:0.78rem;color:#a5b4fc}
-  .meta{font-size:0.75rem;color:#9ca3af}
-  .status{padding:4px 8px;border-radius:999px;border:1px solid #374151;background:transparent;cursor:pointer;min-width:56px;text-align:center}
-  .s-p{background:rgba(34,197,94,0.14);border-color:#22c55e;color:#a7f3d0}
-  .s-a{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#fecaca}
-  .s-u{border-style:dashed;color:#9ca3af}
-  .legend{display:flex;gap:12px;font-size:0.78rem;color:#9ca3af;margin-top:6px}
-  .report{margin-top:8px;border-radius:10px;border:1px solid #1f2937;padding:8px;font-size:0.88rem;background:#020617}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:6px;border-bottom:1px solid #111827;text-align:left}
-  th{font-size:0.78rem;color:#9ca3af}
-  tfoot td{font-weight:600;border-top:1px solid #1f2937}
-  .subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:8px}
-  .sub{padding:8px;border-radius:8px;border:1px solid #1f2937}
-  .sub .c{color:#a5b4fc;font-size:0.78rem}
-  .empty{padding:10px;text-align:center;color:#9ca3af}
-  @media (max-width:640px){.row{grid-template-columns:1fr 2fr auto}}
+  :root {
+    color-scheme: dark;
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: #020617;
+    color: #e5e7eb;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 900px;
+    padding: 16px;
+  }
+
+  .card {
+    background: #020617;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .muted {
+    font-size: 0.8rem;
+    color: #9ca3af;
+  }
+
+  .pill {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid #334155;
+    color: #c7d2fe;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+  }
+
+  input[type="date"] {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #374151;
+    background: #020617;
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    min-height: 42px;
+    position: relative;
+    z-index: 10;
+  }
+
+  button {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #374151;
+    background: transparent;
+    color: #e5e7eb;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+
+  .weekday-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+
+  .day-btn {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #374151;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .day-btn.active {
+    background: rgba(99,102,241,0.25);
+    color: #e5e7eb;
+    border-color: #6366f1;
+  }
+
+  .section {
+    margin-top: 16px;
+  }
+
+  .section-title {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .routine {
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .class-row {
+    display: grid;
+    grid-template-columns: 1.2fr 2.5fr auto;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid #111827;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .class-row:last-child {
+    border-bottom: none;
+  }
+
+  .time {
+    font-weight: 600;
+  }
+
+  .code {
+    font-size: 0.75rem;
+    color: #a5b4fc;
+  }
+
+  .meta {
+    font-size: 0.75rem;
+    color: #9ca3af;
+  }
+
+  .status {
+    min-width: 50px;
+    text-align: center;
+    border-radius: 999px;
+    padding: 4px 8px;
+    border: 1px dashed #374151;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+
+  .present {
+    border-style: solid;
+    border-color: #22c55e;
+    background: rgba(34,197,94,0.2);
+    color: #bbf7d0;
+  }
+
+  .absent {
+    border-style: solid;
+    border-color: #ef4444;
+    background: rgba(239,68,68,0.2);
+    color: #fecaca;
+  }
+
+  .subjects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .subject-card {
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .report table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .report th, .report td {
+    padding: 6px;
+    border-bottom: 1px solid #111827;
+    text-align: left;
+  }
+
+  .report th {
+    color: #9ca3af;
+  }
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="card">
-    <header>
-      <div>
-        <h1>Sem 3 · Routine</h1>
-        <div style="font-size:0.82rem;color:#9ca3af">Fixed timetable · Local attendance</div>
-      </div>
-      <div class="pill">Offline</div>
-    </header>
+<div class="app">
+<div class="card">
 
-    <div class="controls">
-      <div>
-        <label for="date">Date</label><br>
-        <input id="date" type="date">
-      </div>
-      <div>
-        <label>&nbsp;</label><br>
-        <button id="today" class="btn">Today</button>
-      </div>
-      <div style="min-width:160px">
-        <label>Day</label><br>
-        <div id="daychip" style="padding:6px 10px;border-radius:999px;border:1px solid #374151;color:#e5e7eb">–</div>
-      </div>
-    </div>
+<header>
+  <div>
+    <h1>Sem 3 · Routine</h1>
+    <div class="muted">Fixed schedule · Local attendance</div>
+  </div>
+  <div class="pill">Offline</div>
+</header>
 
-    <div class="weekday-row" id="wds">
-      <div class="wd" data-day="Monday">Mon</div>
-      <div class="wd" data-day="Tuesday">Tue</div>
-      <div class="wd" data-day="Wednesday">Wed</div>
-      <div class="wd" data-day="Thursday">Thu</div>
-      <div class="wd" data-day="Friday">Fri</div>
-      <div class="wd" data-day="Saturday">Sat</div>
-    </div>
-
-    <div class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-weight:600">Classes</div>
-        <div id="mode" style="font-size:0.82rem;color:#9ca3af"></div>
-      </div>
-
-      <div class="legend">
-        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;margin-right:6px"></span> P</div>
-        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;margin-right:6px"></span> A</div>
-        <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#6b7280;margin-right:6px"></span> –</div>
-      </div>
-
-      <div class="routine" id="routine"></div>
-      <div class="empty" id="empt" style="display:none">No classes for this day.</div>
-    </div>
-
-    <div class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-weight:600">Report</div>
-        <div style="font-size:0.82rem;color:#9ca3af">Per paper</div>
-      </div>
-      <div class="report" id="report"></div>
-    </div>
-
-    <div class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-weight:600">Subjects</div>
-        <div style="font-size:0.82rem;color:#9ca3af">Short codes used</div>
-      </div>
-      <div class="subjects" id="subjects"></div>
-    </div>
-
+<div class="controls">
+  <div>
+    <label>Date</label><br>
+    <input type="date" id="datePicker">
+  </div>
+  <div>
+    <label>&nbsp;</label><br>
+    <button id="todayBtn">Today</button>
+  </div>
+  <div>
+    <label>Day</label><br>
+    <div id="dayLabel" class="pill">—</div>
   </div>
 </div>
 
-<script>
-/* ---------- Static weekly routine (Sem 3 only) ---------- */
-const WEEKLY_ROUTINE = {
-  "Monday": [
-    {start:"14:00", end:"15:00", paper:"CA&IDS", teacher:"AR/AD"},
-    {start:"15:00", end:"16:00", paper:"CA II", teacher:"TKG"},
-    {start:"16:00", end:"17:00", paper:"CB", teacher:"PS"},
-    {start:"17:00", end:"18:00", paper:"DT-I", teacher:"AKS"},
-    {start:"18:00", end:"19:00", paper:"CB", teacher:"ASD"}
-  ],
-  "Tuesday": [
-    {start:"14:00", end:"15:00", paper:"IEE", teacher:"ST"},
-    {start:"15:00", end:"16:00", paper:"CA&IDS", teacher:"AKS"},
-    {start:"16:00", end:"17:00", paper:"CA II", teacher:"SKD"},
-    {start:"17:00", end:"18:00", paper:"CB", teacher:"RR"},
-    {start:"18:00", end:"19:00", paper:"DT-I", teacher:"SKD"}
-  ],
-  "Wednesday": [
-    {start:"14:00", end:"15:00", paper:"IEE", teacher:"ST"},
-    {start:"15:00", end:"16:00", paper:"CA&IDS", teacher:"SKD"},
-    {start:"16:00", end:"17:00", paper:"CB", teacher:"PS"},
-    {start:"17:00", end:"18:00", paper:"DT-I", teacher:"AKS"},
-    {start:"18:00", end:"19:00", paper:"CB", teacher:"RR"}
-  ],
-  "Thursday": [
-    {start:"14:00", end:"15:00", paper:"CA II", teacher:"SKD"},
-    {start:"15:00", end:"16:00", paper:"CA&IDS", teacher:"SKD"},
-    {start:"16:00", end:"17:00", paper:"CB", teacher:"RR"},
-    {start:"17:00", end:"18:00", paper:"CB", teacher:"PS"},
-    {start:"18:00", end:"19:00", paper:"Remedial", teacher:""}
-  ],
-  "Friday": [
-    {start:"14:00", end:"15:00", paper:"CA&IDS", teacher:"AKS"},
-    {start:"15:00", end:"16:00", paper:"IEE", teacher:"ST"},
-    {start:"16:00", end:"17:00", paper:"CB", teacher:"PS"},
-    {start:"17:00", end:"18:00", paper:"CA II", teacher:"SKD"},
-    {start:"18:00", end:"19:00", paper:"Remedial", teacher:""}
-  ],
-  "Saturday": [
-    {start:"14:00", end:"15:00", paper:"IEE", teacher:"AB"},
-    {start:"15:00", end:"16:00", paper:"Remedial", teacher:""},
-    {start:"16:00", end:"17:00", paper:"CA II", teacher:"AKS"},
-    {start:"17:00", end:"18:00", paper:"DT-I", teacher:"SKD"},
-    {start:"18:00", end:"19:00", paper:"TUTORIAL", teacher:"AKS"}
-  ]
-};
+<div class="weekday-bar" id="weekdayBar"></div>
 
-/* ---------- Subject full names (for Subjects section only) ---------- */
+<div class="section">
+  <div class="section-title">Classes</div>
+  <div class="routine" id="routine"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Attendance Report</div>
+  <div class="report" id="report"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Subjects</div>
+  <div class="subjects" id="subjects"></div>
+</div>
+
+</div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
 const SUBJECTS = {
   "CA II": "Cost Accounting II",
   "DT-I": "Direct Tax – I",
@@ -172,90 +273,149 @@ const SUBJECTS = {
   "TUTORIAL": "Tutorial"
 };
 
-const ATT_KEY = "sem3_attendance_v_final";
+const ROUTINE = {
+  "Monday": [
+    ["14:00","15:00","CA&IDS","AR/AD"],
+    ["15:00","16:00","CA II","TKG"],
+    ["16:00","17:00","CB","PS"],
+    ["17:00","18:00","DT-I","AKS"],
+    ["18:00","19:00","CB","ASD"]
+  ],
+  "Tuesday": [
+    ["14:00","15:00","IEE","ST"],
+    ["15:00","16:00","CA&IDS","AKS"],
+    ["16:00","17:00","CA II","SKD"],
+    ["17:00","18:00","CB","RR"],
+    ["18:00","19:00","DT-I","SKD"]
+  ],
+  "Wednesday": [
+    ["14:00","15:00","IEE","ST"],
+    ["15:00","16:00","CA&IDS","SKD"],
+    ["16:00","17:00","CB","PS"],
+    ["17:00","18:00","DT-I","AKS"],
+    ["18:00","19:00","CB","RR"]
+  ],
+  "Thursday": [
+    ["14:00","15:00","CA II","SKD"],
+    ["15:00","16:00","CA&IDS","SKD"],
+    ["16:00","17:00","CB","RR"],
+    ["17:00","18:00","CB","PS"],
+    ["18:00","19:00","Remedial",""]
+  ],
+  "Friday": [
+    ["14:00","15:00","CA&IDS","AKS"],
+    ["15:00","16:00","IEE","ST"],
+    ["16:00","17:00","CB","PS"],
+    ["17:00","18:00","CA II","SKD"],
+    ["18:00","19:00","Remedial",""]
+  ],
+  "Saturday": [
+    ["14:00","15:00","IEE","AB"],
+    ["15:00","16:00","Remedial",""],
+    ["16:00","17:00","CA II","AKS"],
+    ["17:00","18:00","DT-I","SKD"],
+    ["18:00","19:00","TUTORIAL","AKS"]
+  ]
+};
 
-/* ---------- Helpers ---------- */
-function toISO(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
-const WEEKDAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-function weekdayFromISO(i){const[a,b,c]=i.split("-").map(Number);return WEEKDAYS[new Date(a,b-1,c).getDay()]}
-function formatRange(s,e){return s&&e?`${s}–${e}`:""}
+const ATT_KEY = "sem3_att";
 
-function loadAtt(){try{return JSON.parse(localStorage.getItem(ATT_KEY))||{}}catch{return{}}}
-function saveAtt(m){localStorage.setItem(ATT_KEY,JSON.stringify(m))}
-function key(d,s){return`${d}__${s.start}__${s.paper}`}
-function getStatus(d,s){return loadAtt()[key(d,s)]||"u"}
-function setStatus(d,s,v){const m=loadAtt();v==="u"?delete m[key(d,s)]:m[key(d,s)]=v;saveAtt(m)}
-function next(v){return v==="u"?"p":v==="p"?"a":"u"}
+/* ---------- LOGIC ---------- */
+const datePicker = document.getElementById("datePicker");
+const routineEl = document.getElementById("routine");
+const reportEl = document.getElementById("report");
+const dayLabel = document.getElementById("dayLabel");
+const weekdayBar = document.getElementById("weekdayBar");
 
-/* ---------- Subjects (fixed & clean) ---------- */
-const subjectsEl=document.getElementById("subjects");
-function renderSubjects(){
-  subjectsEl.innerHTML="";
-  const seen=new Set();
-  Object.values(WEEKLY_ROUTINE).flat().forEach(s=>{
-    if(seen.has(s.paper))return;
-    seen.add(s.paper);
-    const d=document.createElement("div");
-    d.className="sub";
-    d.innerHTML=`<div class="c">${s.paper}</div><div style="font-weight:600">${SUBJECTS[s.paper]||"—"}</div>`;
-    subjectsEl.appendChild(d);
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+function iso(d){return d.toISOString().slice(0,10);}
+function weekday(iso){return new Date(iso).toLocaleDateString("en-US",{weekday:"long"});}
+
+function loadAtt(){return JSON.parse(localStorage.getItem(ATT_KEY)||"{}");}
+function saveAtt(d){localStorage.setItem(ATT_KEY,JSON.stringify(d));}
+
+function render(date){
+  const day = weekday(date);
+  dayLabel.textContent = `${day} · ${date}`;
+  routineEl.innerHTML = "";
+
+  (ROUTINE[day]||[]).forEach(cls=>{
+    const key = date+"_"+cls[0]+"_"+cls[2];
+    const att = loadAtt()[key] || "";
+
+    const row = document.createElement("div");
+    row.className = "class-row";
+    row.innerHTML = `
+      <div>
+        <div class="time">${cls[0]}–${cls[1]}</div>
+        <div class="code">${cls[2]}</div>
+      </div>
+      <div>
+        <div>${SUBJECTS[cls[2]]}</div>
+        <div class="meta">${cls[3] || "—"}</div>
+      </div>
+      <div class="status ${att}" data-key="${key}">${att==="present"?"P":att==="absent"?"A":"–"}</div>
+    `;
+    routineEl.appendChild(row);
+  });
+
+  document.querySelectorAll(".status").forEach(btn=>{
+    btn.onclick = ()=>{
+      const m = loadAtt();
+      const k = btn.dataset.key;
+      m[k] = m[k]==="present"?"absent":m[k]==="absent"?"": "present";
+      saveAtt(m);
+      render(date);
+      report();
+    };
   });
 }
 
-/* ---------- Routine + Attendance ---------- */
-const dateInput=document.getElementById("date"),routine=document.getElementById("routine"),
-empt=document.getElementById("empt"),daychip=document.getElementById("daychip");
-
-function applyBtn(b,v){
-  b.className="status";
-  if(v==="p"){b.classList.add("s-p");b.textContent="P"}
-  else if(v==="a"){b.classList.add("s-a");b.textContent="A"}
-  else{b.classList.add("s-u");b.textContent="–"}
+function report(){
+  const m = loadAtt();
+  const stats = {};
+  Object.values(m).forEach(v=>{
+    if(!v) return;
+    stats[v] = (stats[v]||0)+1;
+  });
+  reportEl.innerHTML = `
+    <table>
+      <tr><th>Present</th><th>Absent</th></tr>
+      <tr><td>${stats.present||0}</td><td>${stats.absent||0}</td></tr>
+    </table>`;
 }
 
-function renderFor(iso){
-  const wd=weekdayFromISO(iso);
-  daychip.textContent=`${wd} · ${iso}`;
-  routine.innerHTML="";
-  const list=WEEKLY_ROUTINE[wd]||[];
-  if(!list.length){empt.style.display="block";return}
-  empt.style.display="none";
-  list.forEach(s=>{
-    const r=document.createElement("div");r.className="row";
-    r.innerHTML=`<div><div class="time">${formatRange(s.start,s.end)}</div><div class="code">${s.paper}</div></div>
-                 <div><div style="font-weight:600">${SUBJECTS[s.paper]||s.paper}</div><div class="meta">${s.teacher||"—"}</div></div>`;
-    const btn=document.createElement("button");btn.className="status";
-    let v=getStatus(iso,s);applyBtn(btn,v);
-    btn.onclick=()=>{v=next(v);setStatus(iso,s,v);applyBtn(btn,v);buildReport()};
-    const w=document.createElement("div");w.appendChild(btn);
-    r.appendChild(w);routine.appendChild(r);
+function init(){
+  DAYS.forEach(d=>{
+    const b=document.createElement("div");
+    b.className="day-btn";
+    b.textContent=d.slice(0,3);
+    b.onclick=()=>{
+      const today=new Date();
+      while(today.toLocaleDateString("en-US",{weekday:"long"})!==d) today.setDate(today.getDate()+1);
+      datePicker.value=iso(today);
+      render(datePicker.value);
+    };
+    weekdayBar.appendChild(b);
   });
+
+  const today=new Date();
+  datePicker.value=iso(today);
+  render(datePicker.value);
+  report();
 }
 
-/* ---------- Report ---------- */
-const report=document.getElementById("report");
-function buildReport(){
-  const m=loadAtt(),stats={};let p=0,a=0;
-  Object.entries(m).forEach(([k,v])=>{
-    if(v==="u")return;
-    const paper=k.split("__")[2];
-    stats[paper]=stats[paper]||{p:0,a:0};
-    v==="p"?stats[paper].p++:stats[paper].a++;
-    v==="p"?p++:a++;
-  });
-  if(!Object.keys(stats).length){report.innerHTML="<div style='color:#9ca3af'>No data yet.</div>";return}
-  let h="<table><tr><th>Paper</th><th>P</th><th>A</th><th>%</th></tr>";
-  Object.entries(stats).forEach(([k,v])=>{
-    const t=v.p+v.a;
-    h+=`<tr><td>${k}</td><td>${v.p}</td><td>${v.a}</td><td>${Math.round(v.p/t*100)}%</td></tr>`;
-  });
-  h+=`<tr><td>Total</td><td>${p}</td><td>${a}</td><td>${p+a?Math.round(p/(p+a)*100):0}%</td></tr></table>`;
-  report.innerHTML=h;
-}
+document.getElementById("todayBtn").onclick=()=>{
+  const t=new Date();
+  datePicker.value=iso(t);
+  render(datePicker.value);
+};
 
-/* ---------- Init ---------- */
-function setToday(){const d=new Date();const i=toISO(d);dateInput.value=i;renderFor(i);buildReport()}
-renderSubjects();setToday();buildReport();
+datePicker.onclick=()=>datePicker.showPicker && datePicker.showPicker();
+datePicker.onchange=()=>render(datePicker.value);
+
+init();
 </script>
 </body>
 </html>
