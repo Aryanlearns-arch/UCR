@@ -115,7 +115,7 @@
 </div>
 
 <script>
-/* ---------- Static weekly routine (extracted from your PDF) ---------- */
+/* ---------- Static weekly routine (Sem 3 only) ---------- */
 const WEEKLY_ROUTINE = {
   "Monday": [
     {start:"14:00", end:"15:00", paper:"CA&IDS", teacher:"AR/AD"},
@@ -161,97 +161,101 @@ const WEEKLY_ROUTINE = {
   ]
 };
 
-/* ---------- Attendance storage key ---------- */
+/* ---------- Subject full names (for Subjects section only) ---------- */
+const SUBJECTS = {
+  "CA II": "Cost Accounting II",
+  "DT-I": "Direct Tax – I",
+  "CB": "Consumer Behaviour",
+  "IEE": "Indian Economic Environment",
+  "CA&IDS": "Computerized Accounting & Intro to Data Science",
+  "Remedial": "Remedial Class",
+  "TUTORIAL": "Tutorial"
+};
+
 const ATT_KEY = "sem3_attendance_v_final";
 
 /* ---------- Helpers ---------- */
-function toISO(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${dd}`}
-const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-function weekdayFromISO(iso){const [y,m,d]=iso.split("-").map(Number);return WEEKDAYS[new Date(y,m-1,d).getDay()]}
-function formatRange(s,e){if(!s&&!e)return""; if(s&&!e) return s; if(!s&&e) return e; return `${s}–${e}`}
+function toISO(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+const WEEKDAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function weekdayFromISO(i){const[a,b,c]=i.split("-").map(Number);return WEEKDAYS[new Date(a,b-1,c).getDay()]}
+function formatRange(s,e){return s&&e?`${s}–${e}`:""}
 
-function loadAtt(){try{return JSON.parse(localStorage.getItem(ATT_KEY))||{}}catch(e){return{}}}
+function loadAtt(){try{return JSON.parse(localStorage.getItem(ATT_KEY))||{}}catch{return{}}}
 function saveAtt(m){localStorage.setItem(ATT_KEY,JSON.stringify(m))}
-function statusKey(date,slot){return `${date}__${slot.start||slot.time}__${slot.paper}` }
-function getStatus(date,slot){const m=loadAtt();return m[statusKey(date,slot)]||"unmarked"}
-function setStatus(date,slot,status){const m=loadAtt();const k=statusKey(date,slot); if(status==="unmarked"){delete m[k]} else m[k]=status; saveAtt(m)}
-function nextStatus(cur){if(cur==="unmarked")return"present"; if(cur==="present")return"absent"; return"unmarked"}
+function key(d,s){return`${d}__${s.start}__${s.paper}`}
+function getStatus(d,s){return loadAtt()[key(d,s)]||"u"}
+function setStatus(d,s,v){const m=loadAtt();v==="u"?delete m[key(d,s)]:m[key(d,s)]=v;saveAtt(m)}
+function next(v){return v==="u"?"p":v==="p"?"a":"u"}
 
-/* ---------- Render subjects list ---------- */
-const subjectsEl = document.getElementById("subjects");
+/* ---------- Subjects (fixed & clean) ---------- */
+const subjectsEl=document.getElementById("subjects");
 function renderSubjects(){
   subjectsEl.innerHTML="";
-  const seen = {};
+  const seen=new Set();
   Object.values(WEEKLY_ROUTINE).flat().forEach(s=>{
-    const key = s.paper;
-    if(seen[key]) return; seen[key]=1;
-    const div = document.createElement("div"); div.className="sub";
-    div.innerHTML = `<div class="c">${key}</div><div style="font-weight:600">${s.teacher||"—"}</div>`;
-    subjectsEl.appendChild(div);
+    if(seen.has(s.paper))return;
+    seen.add(s.paper);
+    const d=document.createElement("div");
+    d.className="sub";
+    d.innerHTML=`<div class="c">${s.paper}</div><div style="font-weight:600">${SUBJECTS[s.paper]||"—"}</div>`;
+    subjectsEl.appendChild(d);
   });
 }
 
-/* ---------- Render routine for a date ---------- */
-const dateInput = document.getElementById("date"), routineEl=document.getElementById("routine"), empt=document.getElementById("empt"), modeEl=document.getElementById("mode"), dayChip=document.getElementById("daychip");
-function renderFor(iso){
-  if(!iso) return;
-  const wd = weekdayFromISO(iso);
-  modeEl.textContent = wd;
-  dayChip.textContent = `${wd} · ${iso}`;
-  const list = (WEEKLY_ROUTINE[wd]||[]).slice();
-  routineEl.innerHTML = "";
-  if(!list.length){empt.style.display="block"; return} empt.style.display="none";
-  list.forEach(slot=>{
-    const row = document.createElement("div"); row.className="row";
-    const left = document.createElement("div"); left.innerHTML = `<div class="time">${formatRange(slot.start,slot.end)}</div><div class="code">${slot.paper}</div>`;
-    const mid = document.createElement("div"); mid.innerHTML = `<div style="font-weight:600">${slot.paper}</div><div class="meta">${slot.teacher||"—"}</div>`;
-    const right = document.createElement("div");
-    const btn = document.createElement("button"); btn.className="status";
-    let st = getStatus(iso,slot);
-    applyBtn(btn,st);
-    btn.onclick = ()=>{ st=nextStatus(st); setStatus(iso,slot,st); applyBtn(btn,st); buildReport(); }
-    right.appendChild(btn);
-    row.appendChild(left); row.appendChild(mid); row.appendChild(right);
-    routineEl.appendChild(row);
-  });
+/* ---------- Routine + Attendance ---------- */
+const dateInput=document.getElementById("date"),routine=document.getElementById("routine"),
+empt=document.getElementById("empt"),daychip=document.getElementById("daychip");
+
+function applyBtn(b,v){
+  b.className="status";
+  if(v==="p"){b.classList.add("s-p");b.textContent="P"}
+  else if(v==="a"){b.classList.add("s-a");b.textContent="A"}
+  else{b.classList.add("s-u");b.textContent="–"}
 }
-function applyBtn(btn,status){
-  btn.className="status";
-  if(status==="present"){btn.classList.add("s-p"); btn.textContent="P"}
-  else if(status==="absent"){btn.classList.add("s-a"); btn.textContent="A"}
-  else {btn.classList.add("s-u"); btn.textContent="–"}
+
+function renderFor(iso){
+  const wd=weekdayFromISO(iso);
+  daychip.textContent=`${wd} · ${iso}`;
+  routine.innerHTML="";
+  const list=WEEKLY_ROUTINE[wd]||[];
+  if(!list.length){empt.style.display="block";return}
+  empt.style.display="none";
+  list.forEach(s=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML=`<div><div class="time">${formatRange(s.start,s.end)}</div><div class="code">${s.paper}</div></div>
+                 <div><div style="font-weight:600">${SUBJECTS[s.paper]||s.paper}</div><div class="meta">${s.teacher||"—"}</div></div>`;
+    const btn=document.createElement("button");btn.className="status";
+    let v=getStatus(iso,s);applyBtn(btn,v);
+    btn.onclick=()=>{v=next(v);setStatus(iso,s,v);applyBtn(btn,v);buildReport()};
+    const w=document.createElement("div");w.appendChild(btn);
+    r.appendChild(w);routine.appendChild(r);
+  });
 }
 
 /* ---------- Report ---------- */
-const reportEl = document.getElementById("report");
+const report=document.getElementById("report");
 function buildReport(){
-  const map = loadAtt(); const entries = Object.entries(map);
-  if(!entries.length){ reportEl.innerHTML=`<div style="color:#9ca3af">No data yet.</div>`; return }
-  const stats = {}; let op=0,oa=0;
-  for(const [k,v] of entries){ if(v!=="present" && v!=="absent") continue; const parts=k.split("__"); if(parts.length!==3) continue; const paper=parts[2]; if(!stats[paper]) stats[paper]={present:0,absent:0}; stats[paper][v]++; if(v==="present")op++; if(v==="absent")oa++; }
-  if(Object.keys(stats).length===0){ reportEl.innerHTML=`<div style="color:#9ca3af">Only unmarked entries.</div>`; return }
-  let html='<table><thead><tr><th>Paper</th><th>P</th><th>A</th><th>%</th></tr></thead><tbody>';
-  Object.keys(stats).forEach(p=>{
-    const s=stats[p]; const t=s.present+s.absent; const pct = t? Math.round((s.present/t)*100):0;
-    html+=`<tr><td>${p}</td><td>${s.present}</td><td>${s.absent}</td><td>${pct}%</td></tr>`;
+  const m=loadAtt(),stats={};let p=0,a=0;
+  Object.entries(m).forEach(([k,v])=>{
+    if(v==="u")return;
+    const paper=k.split("__")[2];
+    stats[paper]=stats[paper]||{p:0,a:0};
+    v==="p"?stats[paper].p++:stats[paper].a++;
+    v==="p"?p++:a++;
   });
-  const total = op+oa; const overall = total?Math.round((op/total)*100):0;
-  html += `</tbody><tfoot><tr><td>Total</td><td>${op}</td><td>${oa}</td><td>${overall}%</td></tr></tfoot></table>`;
-  reportEl.innerHTML = html;
+  if(!Object.keys(stats).length){report.innerHTML="<div style='color:#9ca3af'>No data yet.</div>";return}
+  let h="<table><tr><th>Paper</th><th>P</th><th>A</th><th>%</th></tr>";
+  Object.entries(stats).forEach(([k,v])=>{
+    const t=v.p+v.a;
+    h+=`<tr><td>${k}</td><td>${v.p}</td><td>${v.a}</td><td>${Math.round(v.p/t*100)}%</td></tr>`;
+  });
+  h+=`<tr><td>Total</td><td>${p}</td><td>${a}</td><td>${p+a?Math.round(p/(p+a)*100):0}%</td></tr></table>`;
+  report.innerHTML=h;
 }
 
-/* ---------- Weekday buttons / date logic ---------- */
-function setToday(){ const d=new Date(); const iso = toISO(d); dateInput.value=iso; renderFor(iso); highlight(weekdayFromISO(iso)); buildReport() }
-function highlight(wd){ document.querySelectorAll('.wd').forEach(e=> e.classList.toggle('active', e.dataset.day===wd)); }
-document.getElementById("today").addEventListener("click", ()=>{ setToday(); });
-document.querySelectorAll('.wd').forEach(b=> b.addEventListener('click', (ev)=>{ const day=ev.currentTarget.dataset.day; highlight(day); const today=new Date(); const mon = (d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); const day=x.getDay(); const diff=(day+6)%7; x.setDate(x.getDate()-diff); return x})(today); const offset = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(day); mon.setDate(mon.getDate()+offset); const iso=toISO(mon); dateInput.value=iso; renderFor(iso); buildReport(); }));
-dateInput.addEventListener('change', ()=>{ const v=dateInput.value; if(!v) return; renderFor(v); highlight(weekdayFromISO(v)); buildReport(); });
-
-/* ---------- Initial render ---------- */
-renderSubjects();
-setToday();
-buildReport();
-
+/* ---------- Init ---------- */
+function setToday(){const d=new Date();const i=toISO(d);dateInput.value=i;renderFor(i);buildReport()}
+renderSubjects();setToday();buildReport();
 </script>
 </body>
 </html>
